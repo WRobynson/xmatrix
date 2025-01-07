@@ -1,0 +1,10 @@
+FROM phpmyadmin:5.2.1-apache
+
+RUN openssl req -new -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out /etc/ssl/certs/kumon-certificate.crt -keyout /etc/ssl/private/kumon.key -subj "/C=BR/ST=Brasilia/L=DF/O=CINDACTA/CN=tiopbsb@gmail.com" && \
+	a2enmod ssl && \
+	a2ensite default-ssl && \
+	sed -i 's/ssl-cert-snakeoil.pem/kumon-certificate.crt/' /etc/apache2/sites-available/default-ssl.conf && \
+	sed -i 's/ssl-cert-snakeoil.key/kumon.key/' /etc/apache2/sites-available/default-ssl.conf
+
+# restart apache
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

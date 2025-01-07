@@ -1,0 +1,50 @@
+/*
+	Estilo geral 
+	//////////////////////////////////////////////////////////////////////////////
+*/
+
+/* retirada das setas dos campos numéricos (input type number) */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+/*
+	página principal 
+	//////////////////////////////////////////////////////////////////////////////
+*/
+
+/* estrutura da página */
+
+html, body {
+    width: 100%;
+    height: 100%;
+	padding: 10px;
+	background: #9BCCF0;
+}
+
+main {
+	flex-grow: 1;
+}
+
+footer {
+	padding: 3px 3px;
+	text-align: right;
+}
+
+/*
+	Formulário
+*/
+form {
+	background: lightgray;
+    padding: 10px;
+	border-radius: 5px;
+	margin-bottom: 20px;
+}
+
+form h4 {
+	border-bottom: 1px solid darkgray;
+    padding-bottom: 4px;
+}

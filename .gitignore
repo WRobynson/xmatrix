@@ -1,0 +1,19 @@
+# bizu
+# https://www.pluralsight.com/guides/how-to-use-gitignore-file
+#
+
+*lixo*
+*delme*
+*~
+*.log
+*.erro
+scripts/_log/*
+!scripts/_log/.gitkeep
+teste.php
+teste/
+data/
+backup/
+
+# o conteúdo da pasta do usuário (web) do sistema (não rastreada)
+app/user/*
+!/app/user/.gitkeep

@@ -1,0 +1,21 @@
+{
+    "name": "Desempenho Kumon",
+    "short_name": "DK",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "blue",
+    "theme_color": "red", 
+    "icons": [
+      {
+        "src": "/logo/logo192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/logo/logo512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  

@@ -1,0 +1,100 @@
+version: '3.9'
+
+networks:
+  proxy-network:
+    driver: bridge
+  db-network:
+    driver: bridge
+
+services:
+  mysql:
+    container_name: mysql
+    user: ${UID}:${GID}
+    image: mysql:8.0.34
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
+      timeout: 20s
+      retries: 10
+    volumes:
+      - type: bind
+        source: ./mysql/data
+        target: /var/lib/mysql
+    networks:
+      - db-network      
+ 
+  phpmyadmin:
+    build:
+      context: .
+      dockerfile: dockerfile_pma
+    container_name: phpmyadmin
+    environment:
+      TZ: ${TZ}
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+      UPLOAD_LIMIT: 100M
+    restart: always
+    volumes:
+      - ./_infra/phpmyadmin/config.secret.inc.php:/etc/phpmyadmin/config.secret.inc.php:ro
+      - ./_infra/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+    links:
+      - mysql
+    networks:
+      - proxy-network
+      - db-network
+  
+  php-kumon:
+    build:
+      context: .
+      dockerfile: dockerfile_php-kumon
+    container_name: php-kumon
+    user: ${UID}:${GID}
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_ROOT: ${MYSQL_ROOT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE_KUMON}
+      MYSQL_USER: ${MYSQL_USER_KUMON}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD_KUMON}
+      ROOT_DIR: ${ROOT_DIR}
+      KUMON_DIR: ${KUMON_DIR}
+    volumes:
+      - ./_infra/kumon/www/000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
+      - ./_infra/kumon/php/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
+      - ./_infra/kumon/php/kumon.logrotate:/etc/logrotate.d/kumon
+      - ./kumon/app:/var/www/html
+      - ./_lib:/var/www/html/lib
+      - ./nginx/certs/:/var/www/cert
+    depends_on:
+      mysql:
+        condition: service_healthy
+    links:
+      - mysql
+    networks:
+      - proxy-network
+      - db-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs
+      - ./nginx/vhost:/etc/nginx/conf.d
+      - ./nginx/html:/usr/share/nginx/html
+    restart: always
+    networks:
+      - proxy-network
+
