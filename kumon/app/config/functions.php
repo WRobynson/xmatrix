@@ -116,7 +116,32 @@ function print_r2($arr, $var_name = null)
 	echo "</pre>";
 }
 
+/**
+ * Pega o IP do cliente
+ * 
+ * @return string Endereço IP do cliente
+ */
 
+ function getUserIP()
+ {
+	 $client		=	@$_SERVER["HTTP_CLIENT_IP"];
+	 $forward	=	@$_SERVER["HTTP_X_FORWARDED_FOR"];
+	 $remote		=	$_SERVER["REMOTE_ADDR"];
+ 
+	 if (filter_var($client, FILTER_VALIDATE_IP))
+		 $IP = $client;
+ 
+	 elseif (filter_var($forward, FILTER_VALIDATE_IP))
+		 $IP = $forward;
+ 
+	 else
+		 $IP = $remote;
+ 
+	 if (filter_var($IP, FILTER_VALIDATE_IP))
+		 return $IP;
+	 else
+		 return "IP";
+ }
 
 /**
  * Registra um LOG do sistema
