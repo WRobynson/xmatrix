@@ -11,7 +11,8 @@ scripts/_log/*
 !scripts/_log/.gitkeep
 teste.php
 teste/
-data/
+mysql/data/*
+!mysql/data/.gitkeep
 backup/
 
 # o conteúdo da pasta do usuário (web) do sistema (não rastreada)
