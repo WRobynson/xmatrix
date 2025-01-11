@@ -1,0 +1,20 @@
+tunnel: aba6ab0a-be50-4567-97ab-828974d386c1
+credentials-file: /etc/cloudflared/credentials.json
+
+ingress:
+  - hostname: xmatrix.com.br
+    service: http://nginx:80
+    originRequest:
+      noTLSVerify: true
+
+  - hostname: pma.xmatrix.com.br
+    service: http://nginx:80
+    originRequest:
+      noTLSVerify: true
+
+  - hostname: kumon.xmatrix.com.br
+    service: http://nginx:80
+    originRequest:
+      noTLSVerify: true
+
+  - service: http_status:404
