@@ -5,6 +5,8 @@ networks:
     driver: bridge
   db-network:
     driver: bridge
+  cloudflare-network:
+    driver: bridge
 
 services:
   mysql:
@@ -16,16 +18,14 @@ services:
       TZ: ${TZ}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     healthcheck:
-      test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD" ]
       timeout: 20s
       retries: 10
     volumes:
-      - type: bind
-        source: ./mysql/data
-        target: /var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
     networks:
-      - db-network      
- 
+      - db-network
+
   phpmyadmin:
     build:
       context: .
@@ -44,8 +44,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    links:
-      - mysql
     networks:
       - proxy-network
       - db-network
@@ -73,12 +71,10 @@ services:
       - ./_infra/kumon/php/kumon.logrotate:/etc/logrotate.d/kumon
       - ./kumon/app:/var/www/html
       - ./_lib:/var/www/html/lib
-      - ./nginx/certs/:/var/www/cert
+      - ./nginx/certs:/var/www/cert
     depends_on:
       mysql:
         condition: service_healthy
-    links:
-      - mysql
     networks:
       - proxy-network
       - db-network
@@ -94,8 +90,19 @@ services:
       - ./nginx/certs:/etc/nginx/certs
       - ./nginx/vhost:/etc/nginx/conf.d
       - ./nginx/html:/usr/share/nginx/html
-      - ./nginx/html:/etc/nginx/html
     restart: always
+    depends_on:
+      - php-kumon
     networks:
       - proxy-network
+      - cloudflare-network
 
+  cloudflare:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARED_TOKEN}
+    volumes:
+      - ./_infra/cloudflared:/etc/cloudflared
+    networks:
+      - cloudflare-network

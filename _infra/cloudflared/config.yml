@@ -1,0 +1,23 @@
+tunnel: 6550776e-d472-4b02-b529-e59eeb536f0d
+credentials-file: /root/.cloudflared/6550776e-d472-4b02-b529-e59eeb536f0d.json
+
+ingress:
+  - hostname: xmatrix.com.br
+    service: http://localhost:80
+    originRequest:
+      noTLSVerify: true
+
+  - hostname: pma2.xmatrix.com.br
+    service: http://localhost:80
+    originRequest:
+      noTLSVerify: true
+
+  - hostname: kumon.xmatrix.com.br
+    service: http://localhost:80
+    originRequest:
+      noTLSVerify: true
+
+  - hostname: ssh.xmatrix.com.br
+    service: ssh://127.0.0.1:46875
+
+  - service: http_status:404
