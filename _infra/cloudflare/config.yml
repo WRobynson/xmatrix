@@ -1,5 +1,5 @@
 tunnel: aba6ab0a-be50-4567-97ab-828974d386c1
-credentials-file: /etc/cloudflared/credentials.json
+credentials-file: /etc/cloudflared/cert.pem
 
 ingress:
   - hostname: xmatrix.com.br
