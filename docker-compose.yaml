@@ -88,6 +88,7 @@ services:
       - ./nginx/certs:/etc/nginx/certs
       - ./nginx/vhost:/etc/nginx/conf.d
       - ./nginx/html:/usr/share/nginx/html
+      - ./nginx/html_false:/etc/nginx/html
     restart: always
     depends_on:
       - php-kumon
