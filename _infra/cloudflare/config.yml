@@ -3,17 +3,17 @@ credentials-file: /etc/cloudflared/cert.pem
 
 ingress:
   - hostname: xmatrix.com.br
-    service: http://nginx:80
+    service: https://nginx:443
     originRequest:
       noTLSVerify: true
 
   - hostname: pma.xmatrix.com.br
-    service: http://nginx:80
+    service: https://phpmyadmin:443
     originRequest:
       noTLSVerify: true
 
   - hostname: kumon.xmatrix.com.br
-    service: http://nginx:80
+    service: https://php-kumon:443
     originRequest:
       noTLSVerify: true
 
