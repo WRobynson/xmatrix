@@ -8,12 +8,12 @@ ingress:
       noTLSVerify: true
 
   - hostname: pma.xmatrix.com.br
-    service: https://phpmyadmin:443
+    service: https://172.17.1.2:443
     originRequest:
       noTLSVerify: true
 
   - hostname: kumon.xmatrix.com.br
-    service: https://php-kumon:443
+    service: https://172.17.1.3:443
     originRequest:
       noTLSVerify: true
 
