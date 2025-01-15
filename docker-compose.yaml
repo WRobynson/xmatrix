@@ -54,7 +54,7 @@ services:
       dockerfile: dockerfile_php-kumon
     container_name: php-kumon
     ports:
-      - 8081:443
+      - 8081:80
     user: ${UID}:${GID}
     restart: unless-stopped
     environment:
