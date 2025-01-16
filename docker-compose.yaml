@@ -45,7 +45,7 @@ services:
       mysql:
         condition: service_healthy
     networks:
-      - cloudflare-network
+      - proxy-network
       - db-network
   
   php-kumon:
