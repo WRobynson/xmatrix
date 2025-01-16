@@ -29,8 +29,6 @@ services:
       context: .
       dockerfile: dockerfile_pma
     container_name: phpmyadmin
-    ports:
-      - 8080:443
     environment:
       TZ: ${TZ}
       PMA_HOST: mysql
@@ -53,8 +51,6 @@ services:
       context: .
       dockerfile: dockerfile_php-kumon
     container_name: php-kumon
-    ports:
-      - 8081:80
     user: ${UID}:${GID}
     restart: unless-stopped
     environment:
