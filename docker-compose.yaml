@@ -1,6 +1,6 @@
 networks:
-  #proxy-network:
-  #  driver: bridge
+  proxy-network:
+    driver: bridge
   db-network:
     driver: bridge
   cloudflare-network:
@@ -81,31 +81,27 @@ services:
       - cloudflare-network
       - db-network
 
-  #nginx:
-  #  image: nginx:latest
-  #  container_name: nginx
-  #  ports:
-  #    - "443:443"
-  #    - "80:80"
-  #  volumes:
-  #    - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-  #    - ./nginx/certs:/etc/nginx/certs
-  #    - ./nginx/vhost:/etc/nginx/conf.d
-  #    - ./nginx/html:/usr/share/nginx/html
-  #    - ./nginx/html_false:/etc/nginx/html
-  #  restart: always
-  #  depends_on:
-  #    - php-kumon
-  #  networks:
-  #    - proxy-network
-  #    - cloudflare-network
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs
+      - ./nginx/vhost:/etc/nginx/conf.d
+      - ./nginx/html:/usr/share/nginx/html
+      - ./nginx/html_false:/etc/nginx/html
+    restart: always
+    networks:
+      - proxy-network
+      - cloudflare-network
 
   cloudflare:
     image: cloudflare/cloudflared:latest
     container_name: cloudflare
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token ${CLOUDFLARED_TOKEN}
-    #volumes:
-    #  - ./_infra/cloudflare:/etc/cloudflared
     networks:
       - cloudflare-network
